@@ -1,7 +1,6 @@
 // import Joi from 'joi';
 
 export class CreateMovieDto {
-    public id: number;
     public name: string;
     public description: string;
     public release_date: string;
@@ -12,7 +11,6 @@ export class CreateMovieDto {
 }
 
 export class UpdateMovieDto {
-    public id: number;
     public name: string;
     public description: string;
     public release_date: string;
