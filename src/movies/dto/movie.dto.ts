@@ -5,8 +5,8 @@ export class CreateMovieDto {
     public description: string;
     public release_date: string;
     public ticket_price: number;
-    public country_id: number;
-    public genre_id: number;
+    public country: string;
+    public genre: string;
     public photo: string;
 }
 
@@ -15,8 +15,8 @@ export class UpdateMovieDto {
     public description: string;
     public release_date: string;
     public ticket_price: number;
-    public country_id: number;
-    public genre_id: number;
+    public country: string;
+    public genre: string;
     public photo: string;
 }
 

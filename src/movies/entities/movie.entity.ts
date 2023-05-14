@@ -18,10 +18,10 @@ export class Movie {
   ticket_price: number;
 
   @Column()
-  country_id: number;
+  country: string;
 
   @Column()
-  genre_id: number;
+  genre: string;
 
   @Column({ nullable: true })
   photo: string;

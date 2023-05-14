@@ -1,15 +1,22 @@
-import { Controller, Get, Post, Put, Delete, Param, Body } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Param, Body, Query } from '@nestjs/common';
 import { MoviesService } from './movies.service';
 import { Movie } from './entities/movie.entity';
 import { CreateMovieDto } from './dto/movie.dto';
+import { ElasticSearchService } from './elasticSearch.service';
 
 @Controller('api/v1/movies')
 export class MoviesController {
-  constructor(private readonly moviesService: MoviesService) { }
+  constructor(private readonly moviesService: MoviesService, private searchService: ElasticSearchService) { }
 
   @Get()
   async findAll() {
     return await this.moviesService.getAllMovies();
+  }
+
+  @Get('/search')
+  async getAllMovies(@Query() queryParams) {
+    const result = this.searchService.search('movies', { name: queryParams.query });
+    return result;
   }
 
   @Get(':id')
@@ -19,16 +26,21 @@ export class MoviesController {
 
   @Post()
   async create(@Body() createDto: CreateMovieDto) {
-    return this.moviesService.createMovie(createDto);
+    const data = await this.moviesService.createMovie(createDto);
+    await this.searchService.addDocument('movies', data);
+    return data;
   }
 
   @Put(':id')
   async update(@Param('id') id: number, @Body() movie: Movie): Promise<Movie> {
-    return this.moviesService.updateMovie(id, movie);
+    const updatedMovie = await this.moviesService.updateMovie(id, movie);
+    await this.searchService.updateDocument('movies', id, movie);
+    return updatedMovie;
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: number): Promise<void> {
-    return this.moviesService.deleteMovie(id);
+  async remove(@Param('id') id: number) {
+    this.moviesService.deleteMovie(id);
+    return await this.searchService.deleteDocument('movies', id);
   }
 }
