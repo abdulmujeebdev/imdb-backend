@@ -5,6 +5,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { MoviesModule } from './movies/movies.module';
 import { ConfigModule } from '@nestjs/config';
+import { UsersModule } from './users/users.module';
+import { UserGuard } from './users/users.guard';
+import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -20,9 +23,16 @@ import { ConfigModule } from '@nestjs/config';
       synchronize: true,
     }),
     MoviesModule,
+    UsersModule
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: UserGuard,
+    }
+  ],
 })
 export class AppModule {
   constructor(private dataSource: DataSource) { }
