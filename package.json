@@ -18,11 +18,11 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "typeorm:cli": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli -f src/config/typeorm.config-migrations.ts",
-    "migration:generate": "./node_modules/.bin/ts-node ./node_modules/.bin/typeorm migration:generate -d src/config/typeorm.config.ts",
-    "migration:run": "./node_modules/.bin/ts-node ./node_modules/.bin/typeorm migration:run -d src/config/typeorm.config.ts",
-    "migration:create": "npm run typeorm:cli -- migration:create -d src/database/migrations -n",
-    "migration:revert": "npm run typeorm:cli -- migration:revert"
+    "typeorm:cli": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli -d src/config/typeorm.config.ts",
+    "migration:generate": "npm run typeorm:cli migration:generate",
+    "migration:run": "npm run typeorm:cli migration:run",
+    "migration:revert": "npm run typeorm:cli migration:revert",
+    "migration:create": "npm run typeorm:cli -- migration:create"
   },
   "dependencies": {
     "@elastic/elasticsearch": "^8.7.0",
