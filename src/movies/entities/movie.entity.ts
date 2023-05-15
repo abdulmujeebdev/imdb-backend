@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { MovieRatings } from './movieRatings.entity';
 
 @Entity()
 export class Movie {
@@ -25,4 +26,7 @@ export class Movie {
 
   @Column({ nullable: true })
   photo: string;
+
+  // @OneToMany(type => MovieRatings, movieRating => movieRating.movie_id)
+  // ratings: MovieRatings[];
 }

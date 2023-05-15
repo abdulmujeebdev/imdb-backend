@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Put, Delete, Param, Body, Query } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Param, Body, Query, UseGuards, Request } from '@nestjs/common';
 import { MoviesService } from './movies.service';
 import { Movie } from './entities/movie.entity';
 import { CreateMovieDto } from './dto/movie.dto';
 import { ElasticSearchService } from './elasticSearch.service';
+import { UserGuard } from './../users/users.guard';
 
 @Controller('api/v1/movies')
 export class MoviesController {
@@ -17,6 +18,14 @@ export class MoviesController {
   async getAllMovies(@Query() queryParams) {
     const result = this.searchService.search('movies', { name: queryParams.query });
     return result;
+  }
+
+  @Post('/:id/rating')
+  @UseGuards(UserGuard)
+  async rateMovie(@Request() request, @Param('id') id: number) {
+    const movie = this.moviesService.getMovieById(id);
+    const authUserId = request.user.sub;
+    return authUserId;
   }
 
   @Get(':id')
