@@ -27,6 +27,7 @@ export class Movie {
   @Column({ nullable: true })
   photo: string;
 
-  // @OneToMany(type => MovieRatings, movieRating => movieRating.movie_id)
-  // ratings: MovieRatings[];
+  @OneToMany(() => MovieRatings, rating => rating.movie)
+  ratings: MovieRatings[];
+
 }

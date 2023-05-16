@@ -4,6 +4,7 @@ import { Movie } from './entities/movie.entity';
 import { CreateMovieDto } from './dto/movie.dto';
 import { ElasticSearchService } from './elasticSearch.service';
 import { UserGuard } from './../users/users.guard';
+import { CreateMovieRatingDto } from './dto/movieRatings.dto';
 
 @Controller('api/v1/movies')
 export class MoviesController {
@@ -18,14 +19,6 @@ export class MoviesController {
   async getAllMovies(@Query() queryParams) {
     const result = this.searchService.search('movies', { name: queryParams.query });
     return result;
-  }
-
-  @Post('/:id/rating')
-  @UseGuards(UserGuard)
-  async rateMovie(@Request() request, @Param('id') id: number) {
-    const movie = this.moviesService.getMovieById(id);
-    const authUserId = request.user.sub;
-    return authUserId;
   }
 
   @Get(':id')
@@ -51,5 +44,11 @@ export class MoviesController {
   async remove(@Param('id') id: number) {
     this.moviesService.deleteMovie(id);
     return await this.searchService.deleteDocument('movies', id);
+  }
+
+  @Post(':id/ratings')
+  async createRating(@Param('id') id: number, @Body() createDto: CreateMovieRatingDto) {
+    const data = await this.moviesService.createRating(id, createDto);
+    return data;
   }
 }

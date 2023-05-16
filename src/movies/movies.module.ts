@@ -6,11 +6,12 @@ import { Movie } from './entities/movie.entity';
 import { ElasticSearchService } from './elasticSearch.service';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { ConfigModule } from '@nestjs/config';
+import { MovieRatings } from './entities/movieRatings.entity';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    TypeOrmModule.forFeature([Movie]),
+    TypeOrmModule.forFeature([Movie, MovieRatings]),
     ElasticsearchModule.register({
       node: process.env.ELASTIC_SEARCH_HOST,
       auth: {
