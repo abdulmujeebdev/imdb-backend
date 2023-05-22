@@ -8,6 +8,7 @@ import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
 import { UserGuard } from './users/users.guard';
 import { APP_GUARD } from '@nestjs/core';
+import { DatabaseModule } from './database/database.module';
 
 @Module({
   imports: [
@@ -23,7 +24,8 @@ import { APP_GUARD } from '@nestjs/core';
       synchronize: false,
     }),
     MoviesModule,
-    UsersModule
+    UsersModule,
+    DatabaseModule
   ],
   controllers: [AppController],
   providers: [

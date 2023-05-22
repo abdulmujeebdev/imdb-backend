@@ -1,22 +1,14 @@
 // import Joi from 'joi';
 
+import { Countries } from "../entities/countries.entity";
+
 export class CreateMovieDto {
     public name: string;
     public description: string;
     public release_date: string;
     public ticket_price: number;
-    public country: string;
-    public genre: string;
-    public photo: string;
-}
-
-export class UpdateMovieDto {
-    public name: string;
-    public description: string;
-    public release_date: string;
-    public ticket_price: number;
-    public country: string;
-    public genre: string;
+    public genreIds: number[];
+    public country: Countries;
     public photo: string;
 }
 
