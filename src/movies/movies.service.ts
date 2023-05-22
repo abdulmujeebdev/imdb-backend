@@ -1,28 +1,32 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { Movie } from './entities/movie.entity';
 import { CreateMovieDto } from './dto/movie.dto';
 import { MovieRatings } from './entities/movieRatings.entity';
 import { CreateMovieRatingDto } from './dto/movieRatings.dto';
+import { Genre } from './entities/genre.entity';
+import { User } from 'src/users/entities/user.entity';
+import { GenreDto } from './dto/genre.dto';
 
 @Injectable()
 export class MoviesService {
   constructor(
     @InjectRepository(Movie) private movieRepository: Repository<Movie>,
+    @InjectRepository(MovieRatings) private movieRatingRepository: Repository<MovieRatings>,
+    @InjectRepository(Genre) private genreRepository: Repository<Genre>,
   ) { }
 
-  // find all
   getAllMovies() {
     return this.movieRepository.find();
   }
 
-  // find by id
-  async getMovieById(id) {
+  async getMovieById(id, relationsArray: string[] = []) {
     const movie = await this.movieRepository.findOne({
       where: {
         id: id
-      }
+      },
+      relations: relationsArray
     });
     if (movie) {
       return movie;
@@ -31,17 +35,16 @@ export class MoviesService {
     throw new HttpException('Movie not found', HttpStatus.NOT_FOUND);
   }
 
-  // // create
   async createMovie(createMovieDto: CreateMovieDto) {
     const data = await this.movieRepository.create(createMovieDto);
-    await this.movieRepository.save(data);
-
-    return data;
+    const genreEntities = await this.genreRepository.findBy({ id: In(createMovieDto.genreIds) });
+    data.genre = genreEntities;
+    const movie = await this.movieRepository.save(data);
+    return movie;
   }
 
-  // // update
-  async updateMovie(id, post: CreateMovieDto) {
-    await this.movieRepository.update(id, post);
+  async updateMovie(id, movieDto: CreateMovieDto) {
+    await this.movieRepository.update(id, movieDto);
     const updatedMovie = await this.movieRepository.findOne({
       where: {
         id
@@ -54,7 +57,6 @@ export class MoviesService {
     throw new HttpException('Movie not found', HttpStatus.NOT_FOUND);
   }
 
-  // delete
   async deleteMovie(id: number) {
     const movie = await this.movieRepository.delete(id);
     if (!movie.affected) {
@@ -62,17 +64,16 @@ export class MoviesService {
     }
   }
 
-  async createRating(movieId, request: CreateMovieRatingDto): Promise<MovieRatings> {
-    const movie = await this.getMovieById(movieId);
-    const rating = new MovieRatings();
-    rating.rating = request.rating;
-    rating.movie = movie;
-    if (rating.movie.ratings == null) {
-      rating.movie.ratings = Array<MovieRatings>();
-    }
-    rating.movie.ratings.push(rating);
-    await this.movieRepository.save(movie);
 
-    return rating;
+  async updateGenre(id: number, genreDto: GenreDto) {
+    const genre = await this.genreRepository.findOne({
+      where: { id },
+    });
+    if (!genre) {
+      throw new HttpException('Genre not found', HttpStatus.NOT_FOUND);
+    }
+    genre.score = genreDto.score;
+    this.genreRepository.save(genre);
+    return genre;
   }
 }

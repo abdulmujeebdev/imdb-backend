@@ -7,11 +7,16 @@ import { ElasticSearchService } from './elasticSearch.service';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { ConfigModule } from '@nestjs/config';
 import { MovieRatings } from './entities/movieRatings.entity';
+import { Countries } from './entities/countries.entity';
+import { Genre } from './entities/genre.entity';
+import { UsersService } from 'src/users/users.service';
+import { User } from 'src/users/entities/user.entity';
+import { MovieRatingsService } from './movieRatings.service';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    TypeOrmModule.forFeature([Movie, MovieRatings]),
+    TypeOrmModule.forFeature([Movie, MovieRatings, Countries, Genre, User]),
     ElasticsearchModule.register({
       node: process.env.ELASTIC_SEARCH_HOST,
       auth: {
@@ -22,6 +27,6 @@ import { MovieRatings } from './entities/movieRatings.entity';
     }),
   ],
   controllers: [MoviesController],
-  providers: [MoviesService, ElasticSearchService],
+  providers: [MoviesService, ElasticSearchService, UsersService, MovieRatingsService],
 })
 export class MoviesModule { }

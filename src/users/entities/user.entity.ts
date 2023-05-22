@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { MovieRatings } from 'src/movies/entities/movieRatings.entity';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
 
 @Entity()
 export class User {
@@ -22,7 +23,10 @@ export class User {
 
   @CreateDateColumn()
   created_at: Date;
-    
+
   @UpdateDateColumn()
   updated_at: Date;
+
+  @OneToMany(() => MovieRatings, rating => rating.user)
+  ratings: MovieRatings[];
 }

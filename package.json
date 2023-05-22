@@ -22,7 +22,9 @@
     "migration:generate": "npm run typeorm:cli migration:generate",
     "migration:run": "npm run typeorm:cli migration:run",
     "migration:revert": "npm run typeorm:cli migration:revert",
-    "migration:create": "npm run typeorm:cli -- migration:create"
+    "migration:create": "npm run typeorm:cli -- migration:create",
+    "seed:config": "ts-node ./node_modules/typeorm-seeding/dist/cli.js config -n src/config/typeorm.config-migrations.ts",
+    "seed:run": "ts-node ./node_modules/typeorm-seeding/dist/cli.js seed -n src/config/typeorm.config-migrations.ts"
   },
   "dependencies": {
     "@elastic/elasticsearch": "^8.7.0",
@@ -39,7 +41,8 @@
     "mysql2": "^3.3.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.2.0",
-    "typeorm": "^0.3.16"
+    "typeorm": "^0.3.16",
+    "typeorm-seeding": "^1.6.1"
   },
   "devDependencies": {
     "@nestjs/cli": "^9.0.0",
