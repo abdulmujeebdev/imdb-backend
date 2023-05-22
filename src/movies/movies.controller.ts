@@ -37,21 +37,21 @@ export class MoviesController {
   @Post()
   async create(@Body() createDto: CreateMovieDto) {
     const data = await this.moviesService.createMovie(createDto);
-    // await this.searchService.addDocument('movies', data);
+    await this.searchService.addDocument('movies', data);
     return data;
   }
 
   @Put(':id')
   async update(@Param('id') id: number, @Body() movie: CreateMovieDto): Promise<Movie> {
     const updatedMovie = await this.moviesService.updateMovie(id, movie);
-    // await this.searchService.updateDocument('movies', id, movie);
+    await this.searchService.updateDocument('movies', id, movie);
     return updatedMovie;
   }
 
   @Delete(':id')
   async remove(@Param('id') id: number) {
     this.moviesService.deleteMovie(id);
-    // return await this.searchService.deleteDocument('movies', id);
+    return await this.searchService.deleteDocument('movies', id);
   }
 
   @Post(':id/ratings')
